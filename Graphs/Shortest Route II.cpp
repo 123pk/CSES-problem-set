@@ -1,15 +1,19 @@
-
+/*
+Algorithm :- Floyd Warshall
+Approach :- We try every possible path and maintain  one 2d matrix which store the min cost to rech (i,j) and(j,i)
+Time Complexity :- O(n^3)
+*/
 #include<bits/stdc++.h>
 using namespace std;
 #define int long long
- 
-void find(int node,vector<vector<pair<int,int>>>&graph,vector<vector<int>>&dist,vector<int>&used){
+
+void find(int node,vector<vector<pair<int,int>>>&graph,vector<vector<int>>&dist,vector<int>&used,vector<int>&d){
     
     queue<pair<int,int>>bfs;
     bfs.push({node,0});
     //dist[node][node] = 0;
     int n = graph.size();
-    vector<int>d(n,1e18);
+     
     d[node] = 0;
     
     
@@ -54,30 +58,38 @@ void find(int node,vector<vector<pair<int,int>>>&graph,vector<vector<int>>&dist,
     for(int i=0;i<n;++i){
       //  if(node <= 1)cout<<d[i]<<" ";
         dist[node][i] = d[i];
-    }
+  
+d[i] = 1e18;  }
   //  if(node <= 1)cout<<"\n";
 }
- 
+
 int32_t main(){
     int n,m,q;
     cin>>n>>m>>q;
     
-    vector<vector<int>>dist(n,vector<int>(n,1e18));
+    vector<vector<int>>dist(n,vector<int>(n,1e14));
     
-    vector<vector<pair<int,int>>>graph(n);
+   // vector<vector<pair<int,int>>>graph(n);
     for(int i=0;i<m;++i){
         int u,v,d;
         cin>>u>>v>>d;
         u--;
         v--;
-        graph[u].push_back({v,d});
-        graph[v].push_back({u,d});
+        if(d<dist[u][v]){
+         
+        dist[u][v] = dist[v][u] = min(dist[u][v],d);
+        }
     }
+    for(int i=0;i<n;++i)dist[i][i] = 0;
     
-    vector<int>used(n);
     for(int i=0;i<n;++i){
-        find(i,graph,dist,used);
-        used[i]++;
+         for(int j=0;j<n;++j){
+             for(int l=j+1;l<n;++l){
+                 if((dist[j][i] + dist[i][l])<dist[j][l]){
+                     dist[j][l] = dist[l][j] = dist[j][i] + dist[i][l];
+                 }
+             }
+         }
     }
     
     for(int i=0;i<q;++i){
@@ -85,7 +97,7 @@ int32_t main(){
         cin>>u>>v;
         u--;v--;
         int d = dist[u][v];
-        if(d == 1e18)d = -1;
+        if(d == 1e14)d = -1;
         cout<<d<<"\n";
     }
     
