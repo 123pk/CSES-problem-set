@@ -1,6 +1,8 @@
 /*
 Platform :- CSES
-Approach :- 
+Approach :- We will do bfs and maintain one dist array which store the minimum distance to reach out to each oother node starting from '0'th node,
+            we will greedily do our bfs usign priority queue (min heap) on distance.
+Time Complexity :- O(n+m log (n+m))
 */
 #include<bits/stdc++.h>
 using namespace std;
